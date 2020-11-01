@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "tree.h"
-#include "queue.h"
+#include "Tree.h"
+#include "Queue.h"
 
 int N, Edges;
 int Count = 0;
@@ -40,11 +40,11 @@ void addNode(int k, Node *p)
     q->ID = k;
 }
 
-void printStruct()
+void printStruct(int s)
 {
     //for (int i = 0; i < N; i++)
     int i;
-    for (i = 0; i < 1000; i++)
+    for (i = 0; i < s; i++)
     {
         Node *f = a + i;
         do
@@ -78,7 +78,6 @@ void readFile(FILE *fin)
 void saveStruct(FILE *fin)
 {
     int goc, ke, i;
-    //for (i = 0; i < 1000; i++)
     for (i = 0; i < Edges; i++)
     {
         fscanf(fin, "%d%d", &goc, &ke);
@@ -112,7 +111,8 @@ void saveStruct(FILE *fin)
 
 void resetCheck()
 {
-    for (int i = 0; i < N; i++)
+	int i;
+    for ( i = 0; i < N; i++)
     {
         *(check + i) = 0;
     }
@@ -138,8 +138,9 @@ Node *BFS(int start, int ID)
         while (firstNodeQueue != NULL)
         {
             int first = popNodeQueue();
-            if(first == -1){
-                printf("Khong ton tai duong di tu %d den %d\n",start, ID);
+            if (first == -1)
+            {
+                printf("Khong ton tai duong di tu %d den %d\n", start, ID);
                 resetCheck();
                 freeQueue();
                 return NULL;
@@ -205,8 +206,9 @@ Node *DFS(int start, int ID)
         while (firstNodeQueue != NULL)
         {
             int first = popNodeQueue();
-            if(first == -1){
-                printf("Khong ton tai duong di tu %d den %d\n",start, ID);
+            if (first == -1)
+            {
+                printf("Khong ton tai duong di tu %d den %d\n", start, ID);
                 resetCheck();
                 freeQueue();
                 return NULL;
@@ -230,22 +232,72 @@ Node *DFS(int start, int ID)
 int soDoThiLienThong()
 {
     int vt = 0;
-    while(1)
+    while (1)
     {
         while (*(check + vt) == 1)
         {
             vt++;
-            if(vt == N-1)
-                return;
+            if (vt == N - 1)
+                return 0;
         }
-
     }
+}
+
+void menu()
+{
+    int choice;
+    int IDstart, IDsearch;
+    do
+    {
+        printf("\n----------------------PROJECT1----------------------\n");
+        printf("Chon chuc nang: \n");
+        printf("1.In do thi\n");
+        printf("2.Duyet BFS\n");
+        printf("3.Duyet DFS\n");
+        printf("4.Dem so do thi lien thong\n");
+        printf("0.Thoat\n");
+        printf("Lua chon? \n");
+        scanf("%d", &choice);
+        switch (choice)
+        {
+        case 1:
+            printf("\nNhap so dinh : ");
+            int s;
+            scanf("%d", &s);
+            printStruct(s);
+            printf("\n----------------------------------------------------\n");
+            break;
+        case 2:
+            printf("\nNhap ID Node bat dau va ID Node can tim: ");
+            scanf("%d%d", &IDstart, &IDsearch);
+            BFS(IDstart, IDsearch);
+            printf("So thao tac duyet la: %d", demnodeduyetBFS);
+            demnodeduyetBFS = 0;
+            printf("\n----------------------------------------------------\n");
+            break;
+        case 3:
+            printf("\nNhap ID Node bat dau va ID Node can tim: ");
+            scanf("%d%d", &IDstart, &IDsearch);
+            DFS(IDstart, IDsearch);
+            printf("So thao tac duyet la: %d", demnodeduyetDFS);
+            demnodeduyetDFS = 0;
+            printf("\n----------------------------------------------------\n");
+            break;
+        case 4:
+            printf("\n----------------------------------------------------\n");
+            break;
+        case 0:
+            printf("\n----------------------THANKYOU----------------------\n");
+            exit(0);
+            break;
+        }
+    } while (choice != 0);
 }
 
 int main()
 {
     FILE *fin;
-    fin = fopen("D:\\Son\\CauTruc\\roadNet-PA.txt", "r"); //doc file
+    fin = fopen("D:\\ThucHanh\\Project1\\CauTruc\\roadNet-CA.txt", "r"); //doc file
     if (fin != NULL)
     {
         readFile(fin);
@@ -253,16 +305,7 @@ int main()
         check = (int *)malloc(N * sizeof(int));
         saveStruct(fin);
         fclose(fin);
-        //printStruct();
-
-        BFS(0, 6309);
-        printf("done\n");
-        printf("%d\n", demnodeduyetBFS);
-        printf("done\n");
-        DFS(0, 5455);
-        printf("done\n");
-        printf("%d\n", demnodeduyetDFS);
-        printf("done\n");
+        menu();
     }
     else
     {
