@@ -1,130 +1,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct NodeKe
+typedef struct NodeQueue
 {
-    int id;
-    struct NodeKe *next;
-    // struct Node *listNodeKe;
-} NodeKe;
+  int value;
+  struct NodeQueue *next;
+} NodeQueue;
 
-typedef struct Node
-{
-    int ID;
-    NodeKe *listNodeKe;
-    struct Node *next;
-} Node;
+void pushNodeQueue(int);
+int popNodeQueue();
 
-typedef struct NodeQ
+NodeQueue *initNodeQueue(int value)
 {
-    Node Data;
-    struct NodeQ *Next;
-} NodeQ;
-
-typedef struct Queue
+  NodeQueue *p = (NodeQueue *)malloc(sizeof(NodeQueue));
+  p->value = value;
+  p->next = NULL;
+  return p;
+}
+NodeQueue *firstNodeQueue;
+NodeQueue *lastNodeQueue;
+void pushNodeQueue(int value)
 {
-    NodeQ *Front;
-    NodeQ *Rear; //Node dau va Node cuoi
-    int count;          //dem so phan tu
-} Queue;
-
-Queue* InitQueue()
-{
-    Queue *Q = (Queue *)malloc(sizeof(Queue)); 
-    Q->Front = Q->Rear = NULL;
-    Q->count = 0;
-    return Q;
+  if (firstNodeQueue == NULL)
+  {
+    NodeQueue *p = initNodeQueue(value);
+    firstNodeQueue = p;
+    lastNodeQueue = p;
+  }
+  else
+  {
+    NodeQueue *p = initNodeQueue(value);
+    lastNodeQueue->next = p;
+    lastNodeQueue = p;
+  }
 }
 
-NodeQ* InitNode(int Data){
-    NodeQ *p = (NodeQ*)malloc(sizeof(NodeQ));
-    p->Data = Data;
-    p->Next = NULL;
-    return p; 
-}
-
-
-int Isempty (Queue *Q) 
+int popNodeQueue()
 {
-    if (Q->count == 0) 
-        return 1;
-    return 0;
+  int first = firstNodeQueue->value;
+  NodeQueue *p = firstNodeQueue;
+  firstNodeQueue = firstNodeQueue->next;
+  free(p);
+  return first;
 }
-
-void push(Queue *Q, int x) //them phan tu vao cuoi Queue
+void pushfirstNodeQueue(int value)
 {
-    NodeQ *p = InitNode(x); 
-    if (Isempty(Q))
-    {
-        Q->Front = Q->Rear = p;
-    }
-    else 
-    { 
-        Q->Rear->Data = p->Data;
-        Q->Rear = p;
-    }
-    Q->count ++ ; 
+  if (firstNodeQueue == NULL)
+  {
+    NodeQueue *p = initNodeQueue(value);
+    firstNodeQueue = p;
+    lastNodeQueue = p;
+  }
+  else
+  {
+    NodeQueue *p = initNodeQueue(value);
+    p->next = firstNodeQueue;
+    firstNodeQueue = p;
+  }
 }
-
-int pop(Queue *Q) //Loai bo phan tu khoi dau hang doi
+void freeQueue()
 {
-    // if (Isempty(Q)) 
-    // {
-    //     printf("Hang doi rong !");
-    //     return 0;
-    // }
-    // else
-    // {
-        Node *x = Q->Front->Data;
-        Q->Front = Q->Front->Next;
-        Q->count --;
-        return x; 
-    //}
+  NodeQueue *p;
+  while (firstNodeQueue != NULL)
+  {
+    p = firstNodeQueue->next;
+    free(firstNodeQueue);
+    firstNodeQueue = p;
+  }
 }
-
-int font(Queue *Q){
-    int x = Q->Front->Data;
-    return x;
-}
-
-//Tao CTDL HANg DOI
-// typedef struct QueueNode
-// {
-//     int data;
-//     struct QueueNode *Next;
-// } QNode;
-
-// typedef struct Queue
-// {
-//     QNode *head;
-//     QNode *tail;
-//     int count;
-// } Queue;
-
-// Queue *initQueue()
-// {
-//     Queue *Q = (Queue *)malloc(sizeof(Queue));
-//     Q->count = 0;
-//     Q->head = NULL;
-//     Q->tail = NULL;
-//     return Q;
-// }
-
-// QNode *InitQNode(){
-//     QNode *p = (QNode*)malloc(sizeof(QNode));
-//     p->Next = NULL;
-//     return p;
-// }
-
-
-// int main(){
-//     Queue *Q = InitQueue();
-//     printf("%d\n",Isempty(Q));
-    
-//     push(Q,3);
-//     printf("%d\n",Isempty(Q));
-
-    
-//     printf("%d\n",pop(Q));
-//     printf("%d\n",Isempty(Q));
-// }
