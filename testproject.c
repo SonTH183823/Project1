@@ -3,11 +3,11 @@
 #include "Tree.h"
 #include "Queue.h"
 
-int N, Edges;
+int N , Edges;
 int Count = 0;
 int countBFS = 0;
 int countDFS = 0;
-int soLienThong = 0;
+int countLienThong = 0;
 
 typedef struct Node
 {
@@ -66,8 +66,8 @@ void readFile(FILE *fin)
     {
         fscanf(fin, "%s", str[i]);
     }
-    N = atoi(str[2]);     // so node
-    Edges = atoi(str[4]); //so canh
+    // N = atoi(str[2]);     // so node
+    // Edges = atoi(str[4]); //so canh
     fgets(str[0], 255, fin);
     fgets(str[0], 255, fin);
 }
@@ -75,9 +75,11 @@ void readFile(FILE *fin)
 void saveStruct(FILE *fin)
 {
     int goc, ke, i;
+    printf("%d\n",Edges);
     for (i = 0; i < Edges; i++)
     {
         fscanf(fin, "%d%d", &goc, &ke);
+        printf("%d %d\n",goc,ke);
         if (findValue(root, goc) == -1)
         {
             root = insert(root, goc, Count);
@@ -109,23 +111,25 @@ void saveStruct(FILE *fin)
 //dua tat ca cac node ve trang thai ban dau
 void resetCheck()
 {
-    for (int i = 0; i < N; i++)
+	int i;
+    for ( i = 0; i < N; i++)
     {
         *(check + i) = 0;
     }
     return;
 }
 
+//duyetbfs
 Node *BFS(int start, int ID)
 {
     if (findValue(root, start) == -1)
     {
-        printf("Khong ton tai node bat dau %d", start);
+        printf("Khong ton tai node bat dau %d\n", start);
         return NULL;
     }
     else if (findValue(root, ID) == -1)
     {
-        printf("Khong ton tai node can tim %d", ID);
+        printf("Khong ton tai node can tim %d\n", ID);
         return NULL;
     }
     else
@@ -168,6 +172,7 @@ Node *BFS(int start, int ID)
     }
 }
 
+//duyet dfs
 void pushQ(Node *p)
 {
     if (p->next != NULL)
@@ -175,7 +180,6 @@ void pushQ(Node *p)
         pushQ(p->next);
     }
     int vtKe = findValue(root, p->ID);
-    ;
     if (*(check + vtKe) == 0)
     {
         pushfirstNodeQueue(p->ID);
@@ -226,18 +230,43 @@ Node *DFS(int start, int ID)
     }
 }
 
-int soDoThiLienThong()
+//ham bfs duyet tim so do thi lien thong
+Node *BFS_count(int start)
 {
-    int vt = 0;
-    while (1)
-    {
-        while (*(check + vt) == 1)
+        pushNodeQueue(start);
+        *(check + findValue(root, start)) = 1;
+        while (firstNodeQueue != NULL)
         {
-            vt++;
-            if (vt == N - 1)
-                return 0;
+            int first = popNodeQueue();
+            int vt = findValue(root, first);
+            Node *p = (a + vt)->next;
+            while (p != NULL)
+            {
+                int vtKe = findValue(root, p->ID);
+                if (*(check + vtKe) == 0)
+                {
+                    pushNodeQueue(p->ID);
+                    *(check + vtKe) = 1;
+                }
+                p = p->next;
+            }
+        }
+        countLienThong++;
+}
+
+void soDoThiLienThong()
+{
+	int i;
+    for ( i = 0; i < N; i++)
+    {
+        if (*(check +  i) == 0)
+        {
+            BFS_count((a + i)->ID);
         }
     }
+    resetCheck();
+    freeQueue();
+    printf("\nSo do thi lien thong la %d\n", countLienThong);
 }
 
 void menu()
@@ -280,6 +309,7 @@ void menu()
             printf("\n----------------------------------------------------\n");
             break;
         case 4:
+            soDoThiLienThong();
             printf("\n----------------------------------------------------\n");
             break;
         case 0:
@@ -293,7 +323,7 @@ void menu()
 int main()
 {
     FILE *fin;
-    fin = fopen("D:\\ThucHanh\\Project1\\CauTruc\\roadNet-PA.txt", "r"); //doc file
+    fin = fopen("D:\\ThucHanh\\Project1\\CauTruc\\roadNet-TH.txt", "r"); //doc file
     if (fin != NULL)
     {
         readFile(fin);
@@ -305,7 +335,7 @@ int main()
     }
     else
     {
-        printf("Khong doc duoc file");
+        printf("Khong doc duoc file\n");
         return 0;
     }
 }
