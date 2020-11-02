@@ -110,15 +110,6 @@ struct Node_Tree *insert(struct Node_Tree *node_Tree, int key, int value)
     return node_Tree;
 }
 
-void preOrder(struct Node_Tree *root)
-{
-    if (root != NULL)
-    {
-        printf("%d ", root->key);
-        preOrder(root->left);
-        preOrder(root->right);
-    }
-}
 
 
 int findValue(struct Node_Tree *root, int key)

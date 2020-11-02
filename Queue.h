@@ -17,8 +17,10 @@ NodeQueue *initNodeQueue(int value)
   p->next = NULL;
   return p;
 }
+
 NodeQueue *firstNodeQueue;
 NodeQueue *lastNodeQueue;
+
 void pushNodeQueue(int value)
 {
   if (firstNodeQueue == NULL)
@@ -43,6 +45,7 @@ int popNodeQueue()
   free(p);
   return first;
 }
+
 void pushfirstNodeQueue(int value)
 {
   if (firstNodeQueue == NULL)
@@ -58,6 +61,7 @@ void pushfirstNodeQueue(int value)
     firstNodeQueue = p;
   }
 }
+
 void freeQueue()
 {
   NodeQueue *p;
