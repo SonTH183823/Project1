@@ -1,0 +1,16 @@
+# Directed graph (each unordered pair of nodes is saved once): roadNet-TX.txt 
+# Texas road network
+# Nodes: 1379917 Edges: 3843320
+# FromNodeId	ToNodeId
+0	1
+0	2
+0	29
+1	0
+1	23
+1	32
+2	0
+2	26
+2	34
+29	0
+29	337
+29	358

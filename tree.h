@@ -1,16 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 typedef struct Node_Tree
 {
     int key;
     int value;
-    int check;
     struct Node_Tree *left;
     struct Node_Tree *right;
     int height;
-}Map;
+}Node_Tree;
 
 int height(struct Node_Tree *N)
 {
@@ -31,7 +29,6 @@ struct Node_Tree *newNode_Tree(int key, int value)
         malloc(sizeof(struct Node_Tree));
     node_Tree->key = key;
     node_Tree->value = value;
-    node_Tree->check = 0;
     node_Tree->left = NULL;
     node_Tree->right = NULL;
     node_Tree->height = 1; 

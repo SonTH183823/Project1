@@ -1,4 +1,4 @@
 xuất phát từ 1 điểm đi cho đến khi hàng đợi rỗng
 Nếu còn node chưa duyệt suy ra ta vừa xét 1 phần liên thông
 và tiếp tục đi từ điểm chưa duyệt, lặp lại cho đến khi mọi
-điểm được duyệt
+điểm được duyệt.
