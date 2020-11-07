@@ -18,7 +18,7 @@ typedef struct Node
     struct Node *next;
 } Node;
 
-Node *a; //mang lÆ°u tru cac Node
+Node *a; //mang lưu tru cac Node
 struct Node_Tree *root;
 
 int *check; //mang check trang thai cac Node
@@ -347,14 +347,15 @@ int main()
         readFile(fin);
         a = (Node *)malloc(N * sizeof(Node));
         check = (int *)malloc(N * sizeof(int));
+        menu();
         saveStruct(fin);
         finishRead = clock();
         fclose(fin);
-        menu();
+//        menu();
     }
     else
     {
-        printf("Khong doc duoc file!");
+        printf("Khong doc duoc file");
         return 0;
     }
 }

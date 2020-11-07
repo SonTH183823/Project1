@@ -6,8 +6,6 @@
 
 int N, Edges;
 int Count = 0;
-int countBFS = 0;
-int countDFS = 0;
 int countLienThong = 0;
 int startRead, finishRead;
 int startDFS, finishDFS;
@@ -50,7 +48,7 @@ void printStruct(int s)
     int i;
     if (s > N)
     {
-        printf("Do thi chi co %d dinh\n", N);
+        printf("Do thi chi co %d dinh!\n", N);
         s = N;
     }
     for (i = 0; i < s; i++)
@@ -134,63 +132,34 @@ void resetCheck()
 }
 
 //duyetbfs
-Node *BFS(int start, int ID)
+void BFS(int start)
 {
-    if (findValue(root, start) == -1)
+    int dem = 0;
+    pushNodeQueue(start);
+    *(check + findValue(root, start)) = 1;
+    while (firstNodeQueue != NULL)
     {
-        printf("Khong ton tai duong di tu Node co ID = %d den Node co ID = %d !\n", start, ID);
-        return NULL;
-    }
-    else if (findValue(root, ID) == -1)
-    {
-        printf("Khong ton tai Node can tim %d !\n", ID);
-        return NULL;
-    }
-    else
-    {
-        pushNodeQueue(start);
-        *(check + findValue(root, start)) = 1;
-        while (firstNodeQueue != NULL)
+        int first = popNodeQueue();
+        //printf("%d ", first);
+        dem++;
+        if (dem % 100000 == 0)
         {
-            int first = popNodeQueue();
-            if (first == -1)
-            {
-                printf("Khong ton tai duong di tu Node co ID = %d den Node co ID = %d !\n", start, ID);
-                resetCheck();
-                freeQueue();
-                return NULL;
-            }
-            countBFS++;
-            int vt = findValue(root, first);
-            if (first == ID)
-            {
-                resetCheck();
-                freeQueue();
-                return (a + vt);
-            }
-            else
-            {
-                Node *p = (a + vt)->next;
-                while (p != NULL)
-                {
-                    int vtKe = findValue(root, p->ID);
-                    if (*(check + vtKe) == 0)
-                    {
-                        pushNodeQueue(p->ID);
-                        *(check + vtKe) = 1;
-                    }
-                    p = p->next;
-                }
-            }
+            printf("Da duyet %d dinh!\n", dem);
         }
-        if (firstNodeQueue == NULL)
+        int vt = findValue(root, first);
+        Node *p = (a + vt)->next;
+        while (p != NULL)
         {
-            printf("Khong ton tai duong di tu Node co ID = %d den Node co ID = %d !\n", start, ID);
-            resetCheck();
-            freeQueue();
-            return NULL;
+            int vtKe = findValue(root, p->ID);
+            if (*(check + vtKe) == 0)
+            {
+                pushNodeQueue(p->ID);
+                *(check + vtKe) = 1;
+            }
+            p = p->next;
         }
     }
+    dem = 0;
 }
 
 //duyet dfs
@@ -209,53 +178,24 @@ void pushQ(Node *p)
     return;
 }
 
-Node *DFS(int start, int ID)
+void DFS(int start)
 {
-    if (findValue(root, start) == -1)
+    int dem = 0;
+    pushNodeQueue(start);
+    *(check + findValue(root, start)) = 1;
+    while (firstNodeQueue != NULL)
     {
-        printf("Khong ton tai Node co ID = %d trong do thi!\n", start);
-        return NULL;
-    }
-    else if (findValue(root, ID) == -1)
-    {
-        printf("Khong ton tai Node can tim! %d\n", ID);
-        return NULL;
-    }
-    else
-    {
-        pushNodeQueue(start);
-        *(check + findValue(root, start)) = 1;
-        while (firstNodeQueue != NULL)
+        int first = popNodeQueue();
+        dem++;
+        if (dem % 100000 == 0)
         {
-            int first = popNodeQueue();
-            if (first == -1)
-            {
-                printf("Khong ton tai duong di tu Node co ID = %d den Node co ID = %d !\n", start, ID);
-                resetCheck();
-                freeQueue();
-                return NULL;
-            }
-            countDFS++;
-            int vt = findValue(root, first);
-            if (first == ID)
-            {
-                resetCheck();
-                freeQueue();
-                return (a + vt);
-            }
-            else
-            {
-                pushQ((a + vt)->next);
-            }
+            printf("Da duyet %d dinh!\n", dem);
         }
-        if (firstNodeQueue == NULL)
-        {
-            printf("Khong ton tai duong di tu Node co ID = %d den Node co ID = %d !\n", start, ID);
-            resetCheck();
-            freeQueue();
-            return NULL;
-        }
+        //printf("%d ",first);
+        int vt = findValue(root, first);
+        pushQ((a + vt)->next);
     }
+    dem = 0;
 }
 
 //ham bfs duyet tim so do thi lien thong
@@ -301,7 +241,7 @@ void soDoThiLienThong()
 void menu()
 {
     int choice;
-    int IDstart, IDsearch;
+    int IDstart;
     do
     {
         system("cls");
@@ -326,26 +266,47 @@ void menu()
             system("pause");
             break;
         case 2:
-            printf("\nNhap ID Node bat dau va ID Node can tim: ");
-            scanf("%d%d", &IDstart, &IDsearch);
+            printf("\nNhap ID Node bat dau: ");
+            scanf("%d", &IDstart);
             startBFS = clock();
-            if (BFS(IDstart, IDsearch) != NULL)
-                printf("\nSo thao tac duyet la: %d", countBFS);
+            BFS(IDstart);
+            printf("\n");
+            int i;
+            for (i = 0; i < N; i++)
+            {
+                if (*(check + i) == 0)
+                {
+                    BFS((a + i)->ID);
+                    //printf("\n");
+                }
+            }
+            printf("Da duyet xong!");
             finishBFS = clock();
-            countBFS = 0;
             printf("\nThoi gian duyet BFS la: xap xi %d\n", (finishBFS - startBFS));
             printf("\n----------------------------------------------------\n");
+            freeQueue();
+            resetCheck();
             system("pause");
             break;
         case 3:
-            printf("\nNhap ID Node bat dau va ID Node can tim: ");
-            scanf("%d%d", &IDstart, &IDsearch);
+            printf("\nNhap ID Node bat dau: ");
+            scanf("%d", &IDstart);
             startDFS = clock();
-            if (DFS(IDstart, IDsearch) != NULL)
-                printf("So thao tac duyet la: %d", countDFS);
+            DFS(IDstart);
+            printf("\n");
+            for (i = 0; i < N; i++)
+            {
+                if (*(check + i) == 0)
+                {
+                    DFS((a + i)->ID);
+                    //printf("\n");
+                }
+            }
+            printf("Da duyet xong!");
             finishDFS = clock();
             printf("\nThoi gian duyet DFS la: xap xi %d\n", (finishDFS - startDFS));
-            countDFS = 0;
+            resetCheck();
+            freeQueue();
             printf("\n----------------------------------------------------\n");
             system("pause");
             break;
@@ -379,7 +340,7 @@ void menu()
 int main()
 {
     FILE *fin;
-    fin = fopen("D:\\ThucHanh\\Project1\\CauTruc\\roadNet-TX.txt", "r"); //doc file
+    fin = fopen("D:\\ThucHanh\\Project1\\CauTruc\\roadNet-CA.txt", "r"); //doc file
     if (fin != NULL)
     {
         startRead = clock();
